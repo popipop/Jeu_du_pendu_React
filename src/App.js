@@ -12,6 +12,7 @@ class App extends Component {
     lettresTrouvees: [],
     touches: LETTRES.split(''),
     touchesUtilisees: [],
+    score: 0,
   }
 
   motAuHasard() {
@@ -29,7 +30,7 @@ class App extends Component {
   }
 
   handleToucheClick = lettre => {
-    const { motATrouver, lettresTrouvees, touchesUtilisees } = this.state
+    const { motATrouver, lettresTrouvees, touchesUtilisees, score } = this.state
 
     if (!touchesUtilisees.includes(lettre)) {
       this.setState({
@@ -37,32 +38,56 @@ class App extends Component {
       })    
       if (motATrouver.includes(lettre)) {
         this.setState({
-          lettresTrouvees: [...lettresTrouvees, lettre]
+          lettresTrouvees: [...lettresTrouvees, lettre],
+          score: score + 2
         })
+        return
+      } else {
+        this.setState({
+          score: score - 1
+        })
+        return
       }
     }
-
+    this.setState({
+      score: score - 2
+    })
     return
 
   }
 
+  finPartie() {
+    const { motATrouver, lettresTrouvees } = this.state
+
+    return !motATrouver.every((lettre) => {
+      return lettresTrouvees.includes(lettre)
+    })
+
+  }
+
   render() {
-    const { motATrouver, touches } = this.state
+    const { motATrouver, touches, score } = this.state
     return (
       <div className="App">
         <header className="App-header">
           <h1>Le jeu du pendu</h1>
+          <h3>Score : { score } </h3>
         </header>
-        <section className="jeu">
+        <p className="jeu">
           { motATrouver.map((lettre, index) => (
             <span className="lettreWord" key={index} > { this.lettreAAfficher(lettre) } </span>
           ))}
-        </section>
-        <section className="clavier">
-          {touches.map((lettre, index) => (
-            <Touche bloque={this.toucheABloquer(lettre)} lettre={lettre} key={index} onClick={this.handleToucheClick} />
-          ))}
-        </section>
+        </p>
+        { this.finPartie() ? (
+          <section className="clavier">
+            {touches.map((lettre, index) => (
+              <Touche bloque={this.toucheABloquer(lettre)} lettre={lettre} key={index} onClick={this.handleToucheClick} />
+            ))}
+          </section>
+        ) : (
+          <button>Recommencer</button>
+        )}
+        
       </div>
     );
   }
