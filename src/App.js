@@ -65,6 +65,18 @@ class App extends Component {
 
   }
 
+  reinitialiser() {
+
+    this.setState({
+      motATrouver: this.motAuHasard().toUpperCase().split(''),
+      lettresTrouvees: [],
+      touches: LETTRES.split(''),
+      touchesUtilisees: [],
+      score: 0,
+    })
+
+  }
+
   render() {
     const { motATrouver, touches, score } = this.state
     return (
@@ -85,7 +97,7 @@ class App extends Component {
             ))}
           </section>
         ) : (
-          <button>Recommencer</button>
+          <button onClick={() => this.reinitialiser()} >Recommencer</button>
         )}
         
       </div>
