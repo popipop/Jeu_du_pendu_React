@@ -1,5 +1,10 @@
 .touche {
-  font-size: 2em
+  font-size: 2em;
+  cursor: pointer;
+}
+
+.touche:hover {
+  background-color: orange
 }
 
 .bloque {
